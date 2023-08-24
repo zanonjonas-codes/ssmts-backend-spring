@@ -34,10 +34,7 @@ public class TenantModelAssembler extends RepresentationModelAssemblerSupport<Te
   public CollectionModel<TenantResponseModel> toCollectionModel(Iterable<? extends TenantEntity> entities) {
     CollectionModel<TenantResponseModel> responseModels = super.toCollectionModel(entities);
 
-    responseModels.add(linkTo(
-        methodOn(TenantController.class)
-            .findAll())
-        .withSelfRel());
+    responseModels.add(linkTo(methodOn(TenantController.class).findAll(null)).withSelfRel());
 
     return responseModels;
   }
