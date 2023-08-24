@@ -37,7 +37,7 @@ public class TenantController {
   @Autowired
   private PagedResourcesAssembler<TenantEntity> pagedResourcesAssembler;
 
-  // @PreAuthorize("hasRole('USER')")
+  // @PreAuthorize("hasRole('USER')") a
   @PostMapping()
   public ResponseEntity<TenantResponseModel> create(
       @RequestBody TenantRequestModel requestModel) {
