@@ -1,7 +1,10 @@
-package com.zanonjonascodes.ssmts.tenant;
+package com.zanonjonascodes.ssmts.unit_tests.tenant;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +23,13 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.zanonjonascodes.ssmts.fixture.TenantFixture;
+import com.zanonjonascodes.ssmts.tenant.TenantEntity;
+import com.zanonjonascodes.ssmts.tenant.TenantMapper;
+import com.zanonjonascodes.ssmts.tenant.TenantMapperImpl;
+import com.zanonjonascodes.ssmts.tenant.TenantModelAssembler;
+import com.zanonjonascodes.ssmts.tenant.TenantRepository;
+import com.zanonjonascodes.ssmts.tenant.TenantResponseModel;
+import com.zanonjonascodes.ssmts.tenant.TenantService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -38,6 +48,8 @@ public class TenantServiceTest {
 
   private TenantFixture fixture;
 
+  TenantEntity tTenantEntity;
+
   @BeforeEach
   public void setup() {
     HttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -50,6 +62,7 @@ public class TenantServiceTest {
     tenantService = new TenantService(repository, mapper, tenantModelAssembler, pagedResourcesAssembler);
 
     fixture = new TenantFixture();
+    tTenantEntity = fixture.getEntity();
   }
 
   @AfterEach
@@ -58,7 +71,7 @@ public class TenantServiceTest {
   }
 
   @Test
-  void testFindAll() {
+  void test_find_all() {
     Pageable pageable = PageRequest.of(0, 10);
     given(repository.findAll(pageable)).willReturn(fixture.getEntityPage());
     
@@ -70,4 +83,28 @@ public class TenantServiceTest {
       i =+ 1;
     }
   }
+
+  @Test
+  void test_find_by_id() {
+    given(repository.findById(tTenantEntity.getId())).willReturn(Optional.of(tTenantEntity));
+    
+    TenantResponseModel responseModel = tenantService.findById(tTenantEntity.getId());
+    
+    assertEquals(tTenantEntity.getId(), responseModel.getId());
+  }
+
+  @Test
+  void test_create() {
+    given(repository.save(tTenantEntity)).willReturn(tTenantEntity);
+
+    TenantResponseModel responseModel = tenantService.create(fixture.getRequestModel());
+    
+    assertEquals(tTenantEntity.getId(), responseModel.getId());
+  }
+
+  @Test
+  void test_delete() {
+    assertDoesNotThrow(() -> tenantService.delete(tTenantEntity.getId()));
+  }
+  
 }
