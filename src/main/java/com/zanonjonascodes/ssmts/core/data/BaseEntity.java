@@ -1,7 +1,7 @@
 package com.zanonjonascodes.ssmts.core.data;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,16 +12,22 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Data
-public abstract class BaseEntity {
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+public abstract class BaseEntity<I extends Serializable> {
   @Id
   @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
   @GeneratedValue(generator = "UUIDGenerator")
   @Column(name = "id", updatable = false, nullable = false)
-  private UUID id;
+  private I id;
 
   @Version
   private Integer version;

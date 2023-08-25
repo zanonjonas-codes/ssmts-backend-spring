@@ -1,9 +1,7 @@
 package com.zanonjonascodes.ssmts.tenant;
 
 import java.util.Map;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -19,23 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.zanonjonascodes.ssmts.core.rest.crud.CrudController;
-import com.zanonjonascodes.ssmts.core.rest.crud.CrudService;
+
+import lombok.AllArgsConstructor;
 
 @RestController()
 @RequestMapping("/tenant")
+@AllArgsConstructor
 public class TenantController
-    implements CrudController<TenantEntity, UUID, TenantRequestModel, TenantResponseModel> {
-  @Autowired
-  private TenantService tenantService;
+    implements CrudController<TenantEntity, String, TenantRequestModel, TenantResponseModel> {
 
-  @Override
-  public CrudService<TenantEntity, UUID, TenantRequestModel, TenantResponseModel> getService() {
-    return tenantService;
-  }
+  private TenantService tenantService;
 
   @PatchMapping("{uuid}")
   public ResponseEntity<TenantResponseModel> patch(
-      @RequestBody Map<String, Object> requestModel, @PathVariable UUID uuid)
+      @RequestBody Map<String, Object> requestModel, @PathVariable String uuid)
       throws JsonProcessingException, JsonPatchException {
 
     TenantResponseModel responseModel = tenantService.patch(requestModel, uuid);
@@ -43,7 +38,7 @@ public class TenantController
   }
 
   @GetMapping("{uuid}")
-  public ResponseEntity<TenantResponseModel> findById(@PathVariable UUID uuid) {
+  public ResponseEntity<TenantResponseModel> findById(@PathVariable String uuid) {
     TenantResponseModel responseModel = tenantService.findById(uuid);
     return new ResponseEntity<TenantResponseModel>(responseModel, HttpStatus.OK);
   }
@@ -57,7 +52,7 @@ public class TenantController
   }
 
   @DeleteMapping("{uuid}")
-  public ResponseEntity<TenantResponseModel> delete(@PathVariable UUID uuid) {
+  public ResponseEntity<TenantResponseModel> delete(@PathVariable String uuid) {
     tenantService.delete(uuid);
     return new ResponseEntity<TenantResponseModel>(HttpStatus.OK);
   }

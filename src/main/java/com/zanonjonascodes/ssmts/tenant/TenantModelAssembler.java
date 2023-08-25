@@ -1,21 +1,20 @@
 package com.zanonjonascodes.ssmts.tenant;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 @Component
 public class TenantModelAssembler extends RepresentationModelAssemblerSupport<TenantEntity, TenantResponseModel> {
 
-  @Autowired
   TenantMapper mapper;
 
-  public TenantModelAssembler() {
+  public TenantModelAssembler(TenantMapper mapper) {
     super(TenantController.class, TenantResponseModel.class);
+    this.mapper = mapper;
   }
 
   @Override

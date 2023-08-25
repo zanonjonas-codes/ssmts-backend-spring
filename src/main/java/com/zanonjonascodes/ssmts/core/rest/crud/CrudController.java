@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface CrudController<E, I, V, R> {
 
-  @PostMapping()
-  default ResponseEntity<R> create(@RequestBody V requestModel) {
-    R responseModel = this.getService().create(requestModel);
-    return new ResponseEntity<R>(responseModel, HttpStatus.OK);
-  }
+  // @PostMapping()
+  // default ResponseEntity<R> create(@RequestBody V requestModel) {
+  //   R responseModel = this.getService().create(requestModel);
+  //   return new ResponseEntity<R>(responseModel, HttpStatus.OK);
+  // }
 
-  public CrudService<E, I, V, R> getService();
+  // public CrudService<E, I, V, R> getService();
 }
