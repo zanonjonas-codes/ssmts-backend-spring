@@ -6,39 +6,59 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.zanonjonascodes.ssmts.core.exception.EntityNotFoundException;
-
+import com.zanonjonascodes.ssmts.core.rest.crud.CrudMapper;
+import com.zanonjonascodes.ssmts.core.rest.crud.CrudService;
 
 @Service
-public class TenantService {
+public class TenantService implements CrudService<TenantEntity, UUID, TenantRequestModel, TenantResponseModel> {
 
   @Autowired
-  private TenantRepository tenantRepository;
+  private TenantRepository repository;
 
   @Autowired
   private TenantMapper mapper;
 
   @Autowired
-  private ObjectMapper objectMapper;
+  private TenantModelAssembler modelAssembler;
 
-  public TenantEntity create(TenantRequestModel requestModel) {
-    TenantEntity entity = mapper.toEntity(requestModel);
-    return tenantRepository.save(entity);
+  @Autowired
+  private PagedResourcesAssembler<TenantEntity> pagedResourcesAssembler;
+
+  @Override
+  public CrudMapper<TenantEntity, TenantRequestModel, TenantResponseModel> getMapper() {
+    return mapper;
   }
 
-  public TenantEntity patch(Map<String, Object> requestModel, UUID uuid)
+  @Override
+  public JpaRepository<TenantEntity, UUID> getRepository() {
+    return repository;
+  }
+
+  @Override
+  public Class<TenantEntity> getEntityClass() {
+    return TenantEntity.class;
+  }
+
+  @Override
+  public Class<TenantRequestModel> getRequestModelClass() {
+    return TenantRequestModel.class;
+  }
+
+  public TenantResponseModel patch(Map<String, Object> requestModel, UUID uuid)
       throws JsonPatchException, JsonProcessingException {
-    TenantEntity oldEntity = tenantRepository.findById(uuid).orElseThrow(() -> {
-        return new EntityNotFoundException(TenantEntity.class, "uuid", uuid.toString());
-      }
-    );
+    TenantEntity oldEntity = repository.findById(uuid).orElseThrow(() -> {
+      return new EntityNotFoundException(TenantEntity.class, "uuid", uuid.toString());
+    });
     JsonMergePatch jsonMergePatch = objectMapper.readValue(objectMapper.writeValueAsString(requestModel),
         JsonMergePatch.class);
     JsonNode patched = jsonMergePatch.apply(objectMapper.convertValue(oldEntity, JsonNode.class));
@@ -47,22 +67,26 @@ public class TenantService {
     TenantEntity patchedEntity = mapper.toEntity(patchedRequestModel);
     patchedEntity.setId(uuid);
 
-    return tenantRepository.save(patchedEntity);
+    TenantEntity savedEntity = repository.save(patchedEntity);
+    return mapper.toResponse(savedEntity);
   }
 
-  public TenantEntity findById(UUID uuid) {
-    return tenantRepository.findById(uuid).orElseThrow(() -> {
-        return new EntityNotFoundException(TenantEntity.class, "uuid", uuid.toString());
-      }
-    );
+  public TenantResponseModel findById(UUID uuid) {
+    TenantEntity entity = repository.findById(uuid).orElseThrow(() -> {
+      return new EntityNotFoundException(TenantEntity.class, "uuid", uuid.toString());
+    });
+
+    return mapper.toResponse(entity);
   }
 
-  public Page<TenantEntity> findAll(Pageable pageable) {
-    return tenantRepository.findAll(pageable);
+  public PagedModel<TenantResponseModel> findAll(Pageable pageable) {
+
+    Page<TenantEntity> page = repository.findAll(pageable);
+    return pagedResourcesAssembler.toModel(page, modelAssembler);
   }
 
   public void delete(UUID uuid) {
-    tenantRepository.deleteById(uuid);
+    repository.deleteById(uuid);
   }
 
 }

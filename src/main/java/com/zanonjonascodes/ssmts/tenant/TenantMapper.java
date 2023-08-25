@@ -2,11 +2,9 @@ package com.zanonjonascodes.ssmts.tenant;
 
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
-public interface TenantMapper {
-  TenantEntity toEntity(TenantRequestModel requestModel);
-  
-  TenantResponseModel toResponse(TenantEntity entity);
+import com.zanonjonascodes.ssmts.core.rest.crud.CrudMapper;
 
-  Iterable<TenantResponseModel> toResponse(Iterable<TenantEntity> entity);
+@Mapper(componentModel = "spring")
+public interface TenantMapper extends CrudMapper<TenantEntity, TenantRequestModel, TenantResponseModel> {
+
 }
