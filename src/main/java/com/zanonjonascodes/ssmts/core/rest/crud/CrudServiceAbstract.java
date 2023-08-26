@@ -17,8 +17,13 @@ import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.zanonjonascodes.ssmts.core.data.BaseEntity;
 import com.zanonjonascodes.ssmts.core.exception.EntityNotFoundException;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public abstract class CrudServiceAbstract<E extends BaseEntity<I>, I extends Serializable, V extends RequestModel, R extends RepresentationModel<R>>
     implements CrudService<E, I, V, R> {
+
+  private ObjectMapper objectMapper;
 
   public R create(V requestModel) {
     E entity = getMapper().toEntity(requestModel);
@@ -28,7 +33,6 @@ public abstract class CrudServiceAbstract<E extends BaseEntity<I>, I extends Ser
 
   public R patch(Map<String, Object> requestModel, I uuid)
       throws JsonPatchException, JsonProcessingException {
-    ObjectMapper objectMapper = new ObjectMapper();
     E oldEntity = getRepository().findById(uuid).orElseThrow(() -> {
       return new EntityNotFoundException(getEntityClass(), "uuid", uuid.toString());
     });
@@ -36,9 +40,7 @@ public abstract class CrudServiceAbstract<E extends BaseEntity<I>, I extends Ser
         JsonMergePatch.class);
     JsonNode patched = jsonMergePatch.apply(objectMapper.convertValue(oldEntity, JsonNode.class));
 
-
-    V patchedRequestModel = objectMapper.treeToValue(patched, getRequestModelClass());
-    E patchedEntity = getMapper().toEntity(patchedRequestModel);
+    E patchedEntity = objectMapper.treeToValue(patched, getEntityClass());
     patchedEntity.setId(uuid);
 
     E savedEntity = getRepository().save(patchedEntity);

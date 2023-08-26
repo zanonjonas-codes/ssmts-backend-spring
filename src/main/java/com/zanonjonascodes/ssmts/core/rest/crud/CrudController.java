@@ -1,17 +1,31 @@
 package com.zanonjonascodes.ssmts.core.rest.crud;
 
-import org.springframework.http.HttpStatus;
+import java.io.Serializable;
+import java.util.Map;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-public interface CrudController<E, I, V, R> {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.zanonjonascodes.ssmts.core.data.BaseEntity;
 
-  // @PostMapping()
-  // default ResponseEntity<R> create(@RequestBody V requestModel) {
-  //   R responseModel = this.getService().create(requestModel);
-  //   return new ResponseEntity<R>(responseModel, HttpStatus.OK);
-  // }
+public interface CrudController<E extends BaseEntity<I>, I extends Serializable, V extends RequestModel, R extends RepresentationModel<R>> {
 
-  // public CrudService<E, I, V, R> getService();
+  ResponseEntity<R> create(V requestModel);
+  
+  ResponseEntity<R> patch(
+      Map<String, Object> requestModel, I uuid)
+      throws JsonProcessingException, JsonPatchException;
+
+  ResponseEntity<R> findById(I uuid);
+
+  ResponseEntity<PagedModel<R>> findAll(Pageable pageable);
+
+  ResponseEntity<R> delete(I uuid);
+
+  CrudService<E, I , V, R> getCrudService();
+
 }

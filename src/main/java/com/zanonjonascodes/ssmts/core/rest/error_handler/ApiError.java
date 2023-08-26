@@ -1,6 +1,6 @@
 package com.zanonjonascodes.ssmts.core.rest.error_handler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,14 +23,14 @@ import lombok.Data;
 public class ApiError {
 
   private HttpStatus status;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-  private LocalDateTime timestamp;
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+  private OffsetDateTime timestamp;
   private String message;
   private String debugMessage;
   private List<ApiSubErrorAbstract> subErrors;
 
   private ApiError() {
-    timestamp = LocalDateTime.now();
+    timestamp = OffsetDateTime.now();
   }
 
   public ApiError(HttpStatus status) {
