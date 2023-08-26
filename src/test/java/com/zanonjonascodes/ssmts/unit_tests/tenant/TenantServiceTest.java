@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -91,18 +90,14 @@ public class TenantServiceTest {
   @Test
   void test_find_by_id() {
     given(repository.findById(tTenantEntity.getId())).willReturn(Optional.of(tTenantEntity));
-
     TenantResponseModel responseModel = tenantService.findById(tTenantEntity.getId());
-
     assertEquals(tTenantEntity.getId(), responseModel.getId());
   }
 
   @Test
   void test_create() {
     given(repository.save(tTenantEntity)).willReturn(tTenantEntity);
-
     TenantResponseModel responseModel = tenantService.create(fixture.getRequestModel());
-
     assertEquals(tTenantEntity.getId(), responseModel.getId());
   }
 
