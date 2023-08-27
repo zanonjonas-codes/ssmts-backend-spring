@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,16 +59,20 @@ public class TenantControllerTest {
 	public void test_find_all() throws Exception {
 		when(tenantService.findAll(any())).thenReturn(tenantFixture.getResponsePagedModel());
 		
-    this.mockMvc.perform(get("/tenant").with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+    this.mockMvc.perform(get("/tenant")
+                          .with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
 	}
 
   @Test
 	public void test_find_by_id() throws Exception {
 		when(tenantService.findById(tenantFixture.getEntity().getId())).thenReturn(tenantFixture.getResponseModel());
 		
-    this.mockMvc.perform(get("/tenant/{id}", tenantFixture.getEntity().getId()).with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+    this.mockMvc.perform(get("/tenant/{id}", tenantFixture.getEntity().getId())
+                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .andDo(print())
+                          .andExpect(status().isOk())
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
 	}
 
   @Test
@@ -78,6 +84,26 @@ public class TenantControllerTest {
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isCreated())
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+	}
+
+  @Test
+  public void delete_by_id() throws Exception {
+    this.mockMvc.perform(delete("/tenant/{id}", tenantFixture.getEntity().getId())
+        .with(httpBasic(basicAuthUser, basicAuthPassword)))
+        .andDo(print())
+        .andExpect(status().isOk());
+  }
+
+  @Test
+	public void test_patch() throws Exception {
+		when(tenantService.patch(tenantFixture.getRequestModelAsMap(), tenantFixture.getEntity().getId())).thenReturn(tenantFixture.getResponseModel());
+    this.mockMvc.perform(patch("/tenant/{id}", tenantFixture.getEntity().getId())
+                          .contentType(APPLICATION_JSON_UTF8)
+                          .content(tenantFixture.getRequestModelAsJson())
+                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .andDo(print())
+                          .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
 	}
 

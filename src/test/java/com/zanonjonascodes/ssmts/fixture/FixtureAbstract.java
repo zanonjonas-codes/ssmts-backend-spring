@@ -2,6 +2,7 @@ package com.zanonjonascodes.ssmts.fixture;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,7 +12,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import com.zanonjonascodes.ssmts.core.config.parser.JacksonConfig;
 import com.zanonjonascodes.ssmts.core.data.BaseEntity;
@@ -45,6 +46,11 @@ public abstract class FixtureAbstract<E extends BaseEntity<I>, I extends Seriali
   public String getRequestModelAsJson() throws JsonProcessingException {
     JacksonConfig jacksonConfig = new JacksonConfig();
     return jacksonConfig.getObjectMapper().writeValueAsString(getRequestModel());
+  }
+
+  public Map<String, Object> getRequestModelAsMap() throws JsonProcessingException {
+    JacksonConfig jacksonConfig = new JacksonConfig();
+    return jacksonConfig.getObjectMapper().convertValue(getRequestModel(), new TypeReference<Map<String, Object>>() { });
   }
 
   public Page<E> getEntityPage() {
