@@ -14,7 +14,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.zanonjonascodes.ssmts.core.data.BaseEntity;
 
-public interface CrudService<E extends BaseEntity<I>, I extends Serializable, V extends RequestModel, R extends RepresentationModel<R>> {
+public interface CrudService<E extends BaseEntity<I>, I extends Serializable, V extends RequestModel, R extends RepresentationModel<R>>
+    extends CrudHooks<E, I, V, R> {
 
   R create(V requestModel);
 
@@ -37,5 +38,9 @@ public interface CrudService<E extends BaseEntity<I>, I extends Serializable, V 
   PagedResourcesAssembler<E> getPagedResourcesAssembler();
 
   RepresentationModelAssemblerSupport<E, R> getModelAssembler();
+
+  E applyDefaultValues(E entity);
+
+  void validateEntity(E entity);
 
 }

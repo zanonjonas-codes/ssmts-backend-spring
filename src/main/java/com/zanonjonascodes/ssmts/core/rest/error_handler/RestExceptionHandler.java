@@ -93,13 +93,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * Handles javax.validation.ConstraintViolationException. Thrown when @Validated
+   * Handles jakarta.validation.ConstraintViolationException. Thrown when @Validated
    * fails.
    *
    * @param ex the ConstraintViolationException
    * @return the ApiError object
    */
-  @ExceptionHandler(ConstraintViolationException.class)
+  @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
   protected ResponseEntity<Object> handleConstraintViolation(
     jakarta.validation.ConstraintViolationException ex) {
     ApiError apiError = new ApiError(BAD_REQUEST);

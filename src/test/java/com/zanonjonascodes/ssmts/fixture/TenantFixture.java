@@ -17,12 +17,12 @@ public class TenantFixture extends FixtureAbstract<TenantEntity, String, TenantR
     return List.of(
         TenantEntity.builder()
             .id("1")
-            .companyName("The company 1")
+            .tenantName("The company 1")
             .logoImgUrl("the logo image url 2")
             .build(),
         TenantEntity.builder()
             .id("2")
-            .companyName("The company 2")
+            .tenantName("The company 2")
             .logoImgUrl("the logo image url 2")
             .build());
   }

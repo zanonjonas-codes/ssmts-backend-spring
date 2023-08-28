@@ -105,5 +105,4 @@ public class UserServiceTest {
   void test_delete() {
     assertDoesNotThrow(() -> userService.delete(tUserEntity.getId()));
   }
-
 }

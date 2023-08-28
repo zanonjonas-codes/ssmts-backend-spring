@@ -61,7 +61,7 @@ public class TenantControllerTest {
 		
     this.mockMvc.perform(get("/tenant")
                           .with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
-				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
 	}
 
   @Test
@@ -72,7 +72,7 @@ public class TenantControllerTest {
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isOk())
-				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
 	}
 
   @Test
@@ -84,7 +84,7 @@ public class TenantControllerTest {
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isCreated())
-				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
 	}
 
   @Test
@@ -104,7 +104,7 @@ public class TenantControllerTest {
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isOk())
-				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getCompanyName())));
+				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
 	}
 
 }

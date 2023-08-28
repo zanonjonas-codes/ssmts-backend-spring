@@ -49,4 +49,9 @@ public class UserService extends CrudServiceAbstract<UserEntity, String, UserReq
     return pagedResourcesAssembler;
   }
 
+  @Override
+  public UserEntity applyDefaultValues(UserEntity entity) {
+    if (entity.getIsEnabled() == null) entity.setIsEnabled(true);
+    return entity;
+  }
 }

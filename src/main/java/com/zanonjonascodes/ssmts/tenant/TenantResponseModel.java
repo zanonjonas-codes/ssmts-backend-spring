@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class TenantResponseModel extends ResponseModel<TenantResponseModel, String> {
-  protected String companyName;
+  protected String tenantName;
 
   protected String logoImgUrl;
 }

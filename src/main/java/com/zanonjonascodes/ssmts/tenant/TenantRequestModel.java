@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TenantRequestModel implements RequestModel {
-  protected String companyName;
+  protected String tenantName;
 
   protected String logoImgUrl;
 }
