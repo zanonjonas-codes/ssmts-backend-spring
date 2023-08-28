@@ -2,7 +2,6 @@ package com.zanonjonascodes.ssmts.user;
 
 import com.zanonjonascodes.ssmts.core.rest.crud.RequestModel;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
