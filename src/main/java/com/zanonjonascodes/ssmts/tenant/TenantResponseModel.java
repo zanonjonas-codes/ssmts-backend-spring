@@ -1,15 +1,13 @@
 package com.zanonjonascodes.ssmts.tenant;
 
-import org.springframework.hateoas.RepresentationModel;
+import com.zanonjonascodes.ssmts.core.rest.crud.ResponseModel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class TenantResponseModel extends RepresentationModel<TenantResponseModel> {
-  protected String id;
-
+public class TenantResponseModel extends ResponseModel<TenantResponseModel, String> {
   protected String companyName;
 
   protected String logoImgUrl;

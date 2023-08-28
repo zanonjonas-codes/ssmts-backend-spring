@@ -1,13 +1,12 @@
 package com.zanonjonascodes.ssmts.user;
 
-import org.springframework.hateoas.RepresentationModel;
+import com.zanonjonascodes.ssmts.core.rest.crud.ResponseModel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class UserResponseModel extends RepresentationModel<UserResponseModel> {
-  protected String id;
+public class UserResponseModel extends ResponseModel<UserResponseModel, String> {
 
 }
