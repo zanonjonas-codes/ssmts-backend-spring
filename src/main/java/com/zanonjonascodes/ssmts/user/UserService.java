@@ -3,6 +3,7 @@ package com.zanonjonascodes.ssmts.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,13 +21,16 @@ public class UserService extends CrudServiceAbstract<UserEntity, String, UserReq
 
   private PagedResourcesAssembler<UserEntity> pagedResourcesAssembler;
 
+  private BCryptPasswordEncoder passwordEncoder;
+
   public UserService(ObjectMapper objectMapper, UserRepository repository, UserMapper mapper,
-      UserModelAssembler modelAssembler, PagedResourcesAssembler<UserEntity> pagedResourcesAssembler) {
+      UserModelAssembler modelAssembler, PagedResourcesAssembler<UserEntity> pagedResourcesAssembler, BCryptPasswordEncoder passwordEncoder) {
     super(objectMapper);
     this.repository = repository;
     this.mapper = mapper;
     this.modelAssembler = modelAssembler;
     this.pagedResourcesAssembler = pagedResourcesAssembler;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
@@ -52,6 +56,16 @@ public class UserService extends CrudServiceAbstract<UserEntity, String, UserReq
   @Override
   public UserEntity applyDefaultValues(UserEntity entity) {
     if (entity.getIsEnabled() == null) entity.setIsEnabled(true);
+    
     return entity;
   }
+
+  @Override
+  public UserEntity beforeCreate(UserEntity entity) {
+    String encodedPassword = passwordEncoder.encode((entity.getPassword()));
+    entity.setPassword(encodedPassword);
+    
+    return entity;
+  }
+
 }

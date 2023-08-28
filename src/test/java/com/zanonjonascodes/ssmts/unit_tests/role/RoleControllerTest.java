@@ -1,4 +1,4 @@
-package com.zanonjonascodes.ssmts.unit_tests.user;
+package com.zanonjonascodes.ssmts.unit_tests.role;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,21 +25,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.zanonjonascodes.ssmts.fixture.UserFixture;
-import com.zanonjonascodes.ssmts.user.UserService;
+import com.zanonjonascodes.ssmts.fixture.RoleFixture;
+import com.zanonjonascodes.ssmts.role.RoleService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class UserControllerTest {
+public class RoleControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
-  private UserService userService;
+  private RoleService roleService;
 
-  private UserFixture userFixture;
+  private RoleFixture roleFixture;
 
   @Value("${props.basic-auth.user}")
   private String basicAuthUser;
@@ -49,7 +49,7 @@ public class UserControllerTest {
 
   @BeforeEach
   private void setup() {
-    userFixture = new UserFixture();
+    roleFixture = new RoleFixture();
   }
 
   public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
@@ -57,39 +57,39 @@ public class UserControllerTest {
 
   @Test
 	public void test_find_all() throws Exception {
-		when(userService.findAll(any())).thenReturn(userFixture.getResponsePagedModel());
+		when(roleService.findAll(any())).thenReturn(roleFixture.getResponsePagedModel());
 		
-    this.mockMvc.perform(get("/user")
+    this.mockMvc.perform(get("/role")
                           .with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
-				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getId())));
+				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
 	}
 
   @Test
 	public void test_find_by_id() throws Exception {
-		when(userService.findById(userFixture.getEntity().getId())).thenReturn(userFixture.getResponseModel());
+		when(roleService.findById(roleFixture.getEntity().getId())).thenReturn(roleFixture.getResponseModel());
 		
-    this.mockMvc.perform(get("/user/{id}", userFixture.getEntity().getId())
+    this.mockMvc.perform(get("/role/{id}", roleFixture.getEntity().getId())
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isOk())
-				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getEmail())));
+				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
 	}
 
   @Test
 	public void test_create() throws Exception {
-		when(userService.create(userFixture.getRequestModel())).thenReturn(userFixture.getResponseModel());
-    this.mockMvc.perform(post("/user")
+		when(roleService.create(roleFixture.getRequestModel())).thenReturn(roleFixture.getResponseModel());
+    this.mockMvc.perform(post("/role")
                           .contentType(APPLICATION_JSON_UTF8)
-                          .content(userFixture.getRequestModelAsJson())
+                          .content(roleFixture.getRequestModelAsJson())
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isCreated())
-				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getId())));
+				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
 	}
 
   @Test
   public void delete_by_id() throws Exception {
-    this.mockMvc.perform(delete("/user/{id}", userFixture.getEntity().getId())
+    this.mockMvc.perform(delete("/role/{id}", roleFixture.getEntity().getId())
         .with(httpBasic(basicAuthUser, basicAuthPassword)))
         .andDo(print())
         .andExpect(status().isOk());
@@ -97,14 +97,14 @@ public class UserControllerTest {
 
   @Test
 	public void test_patch() throws Exception {
-		when(userService.patch(userFixture.getRequestModelAsMap(), userFixture.getEntity().getId())).thenReturn(userFixture.getResponseModel());
-    this.mockMvc.perform(patch("/user/{id}", userFixture.getEntity().getId())
+		when(roleService.patch(roleFixture.getRequestModelAsMap(), roleFixture.getEntity().getId())).thenReturn(roleFixture.getResponseModel());
+    this.mockMvc.perform(patch("/role/{id}", roleFixture.getEntity().getId())
                           .contentType(APPLICATION_JSON_UTF8)
-                          .content(userFixture.getRequestModelAsJson())
+                          .content(roleFixture.getRequestModelAsJson())
                           .with(httpBasic(basicAuthUser, basicAuthPassword)))
                           .andDo(print())
                           .andExpect(status().isOk())
-				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getId())));
+				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
 	}
 
 }

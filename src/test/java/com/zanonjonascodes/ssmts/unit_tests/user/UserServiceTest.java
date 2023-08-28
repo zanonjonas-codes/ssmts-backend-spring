@@ -2,6 +2,7 @@ package com.zanonjonascodes.ssmts.unit_tests.user;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import java.util.Optional;
@@ -13,16 +14,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zanonjonascodes.ssmts.core.config.parser.JacksonConfig;
+import com.zanonjonascodes.ssmts.core.config.security.SecurityConfig;
 import com.zanonjonascodes.ssmts.fixture.UserFixture;
 import com.zanonjonascodes.ssmts.user.UserEntity;
 import com.zanonjonascodes.ssmts.user.UserMapper;
@@ -50,6 +55,7 @@ public class UserServiceTest {
   ObjectMapper objectMapper;
 
   @BeforeEach
+  @MockitoSettings(strictness = Strictness.LENIENT)
   public void setup() {
     HttpServletRequest mockRequest = new MockHttpServletRequest();
     ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockRequest);
@@ -61,7 +67,9 @@ public class UserServiceTest {
     UserMapper mapper = new UserMapperImpl();
     UserModelAssembler userModelAssembler = new UserModelAssembler(mapper);
     PagedResourcesAssembler<UserEntity> pagedResourcesAssembler = new PagedResourcesAssembler<>(null, null);
-    userService = new UserService(objectMapper, repository, mapper, userModelAssembler, pagedResourcesAssembler);
+    BCryptPasswordEncoder passwordEncoder = new SecurityConfig().passwordEncoder();
+
+    userService = new UserService(objectMapper, repository, mapper, userModelAssembler, pagedResourcesAssembler, passwordEncoder);
 
     fixture = new UserFixture();
     tUserEntity = fixture.getEntity();
@@ -96,7 +104,8 @@ public class UserServiceTest {
 
   @Test
   void test_create() {
-    given(repository.save(tUserEntity)).willReturn(tUserEntity);
+    given(repository.save(any())).willReturn(tUserEntity);
+    System.out.println(tUserEntity.getPassword());
     UserResponseModel responseModel = userService.create(fixture.getRequestModel());
     assertEquals(tUserEntity.getId(), responseModel.getId());
   }
