@@ -3,7 +3,7 @@ package com.zanonjonascodes.ssmts.user;
 import java.util.Set;
 
 import com.zanonjonascodes.ssmts.core.rest.crud.ResponseModel;
-import com.zanonjonascodes.ssmts.role.RoleEntity;
+import com.zanonjonascodes.ssmts.role.RoleResponseModel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +20,6 @@ public class UserResponseModel extends ResponseModel<UserResponseModel, String> 
 
   protected String isEnabled;
 
-  protected Set<RoleEntity> grantedRoles;
+  protected Set<RoleResponseModel> grantedRoles;
 
 }

@@ -1,6 +1,6 @@
 package com.zanonjonascodes.ssmts.user;
 
-import java.util.Set;
+import java.util.List;
 
 import com.zanonjonascodes.ssmts.core.data.BaseEntity;
 import com.zanonjonascodes.ssmts.role.RoleEntity;
@@ -8,6 +8,8 @@ import com.zanonjonascodes.ssmts.role.RoleEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -42,7 +44,10 @@ public class UserEntity extends BaseEntity<String> {
   @NotNull
   protected Boolean isEnabled;
 
-  @ManyToMany(mappedBy = "grantedUsers", fetch = FetchType.EAGER)
-  protected Set<RoleEntity> grantedRoles;
+  @JoinTable(name = "users_granted_roles", 
+    joinColumns = @JoinColumn(name = "granted_users_id"), 
+    inverseJoinColumns = @JoinColumn(name = "granted_roles_id"))
+  @ManyToMany(fetch = FetchType.EAGER)
+  protected List<RoleEntity> grantedRoles;
 
 }
