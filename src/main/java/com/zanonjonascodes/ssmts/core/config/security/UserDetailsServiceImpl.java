@@ -1,6 +1,5 @@
 package com.zanonjonascodes.ssmts.core.config.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,9 +9,11 @@ import com.zanonjonascodes.ssmts.core.security.UserPrincipal;
 import com.zanonjonascodes.ssmts.user.UserEntity;
 import com.zanonjonascodes.ssmts.user.UserRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
-public class UserDetailsServiceConfig implements UserDetailsService {
-  @Autowired
+@AllArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override

@@ -27,6 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zanonjonascodes.ssmts.core.config.parser.JacksonConfig;
+import com.zanonjonascodes.ssmts.core.config.security.PasswordEncoderConfig;
 import com.zanonjonascodes.ssmts.core.config.security.SecurityConfig;
 import com.zanonjonascodes.ssmts.fixture.UserFixture;
 import com.zanonjonascodes.ssmts.user.UserEntity;
@@ -67,7 +68,7 @@ public class UserServiceTest {
     UserMapper mapper = new UserMapperImpl();
     UserModelAssembler userModelAssembler = new UserModelAssembler(mapper);
     PagedResourcesAssembler<UserEntity> pagedResourcesAssembler = new PagedResourcesAssembler<>(null, null);
-    BCryptPasswordEncoder passwordEncoder = new SecurityConfig().passwordEncoder();
+    BCryptPasswordEncoder passwordEncoder = new PasswordEncoderConfig().passwordEncoder();
 
     userService = new UserService(objectMapper, repository, mapper, userModelAssembler, pagedResourcesAssembler, passwordEncoder);
 
