@@ -1,6 +1,7 @@
 package com.zanonjonascodes.ssmts.core.rest.error_handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -13,6 +14,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -93,7 +98,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * Handles jakarta.validation.ConstraintViolationException. Thrown when @Validated
+   * Handles jakarta.validation.ConstraintViolationException. Thrown
+   * when @Validated
    * fails.
    *
    * @param ex the ConstraintViolationException
@@ -101,7 +107,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
   protected ResponseEntity<Object> handleConstraintViolation(
-    jakarta.validation.ConstraintViolationException ex) {
+      jakarta.validation.ConstraintViolationException ex) {
     ApiError apiError = new ApiError(BAD_REQUEST);
     apiError.setMessage("Validation error");
     apiError.addValidationErrors(ex.getConstraintViolations());
@@ -213,6 +219,42 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     ApiError apiError = new ApiError(BAD_REQUEST);
     apiError.setMessage(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'",
         ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
+    apiError.setDebugMessage(ex.getMessage());
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler(UsernameNotFoundException.class)
+  protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(UsernameNotFoundException ex,
+      WebRequest request) {
+    ApiError apiError = new ApiError(FORBIDDEN);
+    apiError.setMessage(ex.getMessage());
+    apiError.setDebugMessage(ex.getMessage());
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(BadCredentialsException ex,
+      WebRequest request) {
+    ApiError apiError = new ApiError(FORBIDDEN);
+    apiError.setMessage(ex.getMessage());
+    apiError.setDebugMessage(ex.getMessage());
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler(LockedException.class)
+  protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(LockedException ex,
+      WebRequest request) {
+    ApiError apiError = new ApiError(FORBIDDEN);
+    apiError.setMessage(ex.getMessage());
+    apiError.setDebugMessage(ex.getMessage());
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler(DisabledException.class)
+  protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(DisabledException ex,
+      WebRequest request) {
+    ApiError apiError = new ApiError(FORBIDDEN);
+    apiError.setMessage(ex.getMessage());
     apiError.setDebugMessage(ex.getMessage());
     return buildResponseEntity(apiError);
   }
