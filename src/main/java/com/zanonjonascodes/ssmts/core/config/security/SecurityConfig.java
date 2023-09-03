@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.zanonjonascodes.ssmts.core.security.filter.JwtAuthFilter;
+import com.zanonjonascodes.ssmts.core.config.security.filter.JwtAuthFilter;
 
 import lombok.AllArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.zanonjonascodes.ssmts.core.security.filter;
+package com.zanonjonascodes.ssmts.core.config.security.filter;
 
 import java.io.IOException;
 

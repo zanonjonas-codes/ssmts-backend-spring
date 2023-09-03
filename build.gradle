@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	implementation 'com.github.java-json-tools:json-patch:1.13'
 	implementation 'com.google.guava:guava:32.1.2-jre'
