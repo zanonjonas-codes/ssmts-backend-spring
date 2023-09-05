@@ -3,11 +3,10 @@ package com.zanonjonascodes.ssmts.unit_tests.role;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -60,7 +60,7 @@ public class RoleControllerTest {
 		when(roleService.findAll(any())).thenReturn(roleFixture.getResponsePagedModel());
 		
     this.mockMvc.perform(get("/role")
-                          .with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
+                          .with(SecurityMockMvcRequestPostProcessors.jwt())).andDo(print()).andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
 	}
 
@@ -69,7 +69,7 @@ public class RoleControllerTest {
 		when(roleService.findById(roleFixture.getEntity().getId())).thenReturn(roleFixture.getResponseModel());
 		
     this.mockMvc.perform(get("/role/{id}", roleFixture.getEntity().getId())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
@@ -81,7 +81,7 @@ public class RoleControllerTest {
     this.mockMvc.perform(post("/role")
                           .contentType(APPLICATION_JSON_UTF8)
                           .content(roleFixture.getRequestModelAsJson())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isCreated())
 				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));
@@ -90,7 +90,7 @@ public class RoleControllerTest {
   @Test
   public void delete_by_id() throws Exception {
     this.mockMvc.perform(delete("/role/{id}", roleFixture.getEntity().getId())
-        .with(httpBasic(basicAuthUser, basicAuthPassword)))
+        .with(SecurityMockMvcRequestPostProcessors.jwt()))
         .andDo(print())
         .andExpect(status().isOk());
   }
@@ -101,7 +101,7 @@ public class RoleControllerTest {
     this.mockMvc.perform(patch("/role/{id}", roleFixture.getEntity().getId())
                           .contentType(APPLICATION_JSON_UTF8)
                           .content(roleFixture.getRequestModelAsJson())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(roleFixture.getResponseModel().getId())));

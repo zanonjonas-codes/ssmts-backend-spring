@@ -3,11 +3,10 @@ package com.zanonjonascodes.ssmts.unit_tests.tenant;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -60,7 +60,9 @@ public class TenantControllerTest {
 		when(tenantService.findAll(any())).thenReturn(tenantFixture.getResponsePagedModel());
 		
     this.mockMvc.perform(get("/tenant")
-                          .with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                          .andDo(print())
+                          .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
 	}
 
@@ -69,7 +71,7 @@ public class TenantControllerTest {
 		when(tenantService.findById(tenantFixture.getEntity().getId())).thenReturn(tenantFixture.getResponseModel());
 		
     this.mockMvc.perform(get("/tenant/{id}", tenantFixture.getEntity().getId())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
@@ -81,7 +83,7 @@ public class TenantControllerTest {
     this.mockMvc.perform(post("/tenant")
                           .contentType(APPLICATION_JSON_UTF8)
                           .content(tenantFixture.getRequestModelAsJson())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isCreated())
 				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));
@@ -90,7 +92,7 @@ public class TenantControllerTest {
   @Test
   public void delete_by_id() throws Exception {
     this.mockMvc.perform(delete("/tenant/{id}", tenantFixture.getEntity().getId())
-        .with(httpBasic(basicAuthUser, basicAuthPassword)))
+        .with(SecurityMockMvcRequestPostProcessors.jwt()))
         .andDo(print())
         .andExpect(status().isOk());
   }
@@ -101,7 +103,7 @@ public class TenantControllerTest {
     this.mockMvc.perform(patch("/tenant/{id}", tenantFixture.getEntity().getId())
                           .contentType(APPLICATION_JSON_UTF8)
                           .content(tenantFixture.getRequestModelAsJson())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(tenantFixture.getResponseModel().getTenantName())));

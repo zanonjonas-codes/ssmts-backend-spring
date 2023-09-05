@@ -3,11 +3,10 @@ package com.zanonjonascodes.ssmts.unit_tests.user;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -60,7 +60,7 @@ public class UserControllerTest {
 		when(userService.findAll(any())).thenReturn(userFixture.getResponsePagedModel());
 		
     this.mockMvc.perform(get("/user")
-                          .with(httpBasic(basicAuthUser, basicAuthPassword))).andDo(print()).andExpect(status().isOk())
+                          .with(SecurityMockMvcRequestPostProcessors.jwt())).andDo(print()).andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getId())));
 	}
 
@@ -69,7 +69,7 @@ public class UserControllerTest {
 		when(userService.findById(userFixture.getEntity().getId())).thenReturn(userFixture.getResponseModel());
 		
     this.mockMvc.perform(get("/user/{id}", userFixture.getEntity().getId())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getEmail())));
@@ -81,7 +81,7 @@ public class UserControllerTest {
     this.mockMvc.perform(post("/user")
                           .contentType(APPLICATION_JSON_UTF8)
                           .content(userFixture.getRequestModelAsJson())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isCreated())
 				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getId())));
@@ -90,7 +90,7 @@ public class UserControllerTest {
   @Test
   public void delete_by_id() throws Exception {
     this.mockMvc.perform(delete("/user/{id}", userFixture.getEntity().getId())
-        .with(httpBasic(basicAuthUser, basicAuthPassword)))
+        .with(SecurityMockMvcRequestPostProcessors.jwt()))
         .andDo(print())
         .andExpect(status().isOk());
   }
@@ -101,7 +101,7 @@ public class UserControllerTest {
     this.mockMvc.perform(patch("/user/{id}", userFixture.getEntity().getId())
                           .contentType(APPLICATION_JSON_UTF8)
                           .content(userFixture.getRequestModelAsJson())
-                          .with(httpBasic(basicAuthUser, basicAuthPassword)))
+                          .with(SecurityMockMvcRequestPostProcessors.jwt()))
                           .andDo(print())
                           .andExpect(status().isOk())
 				                  .andExpect(content().string(containsString(userFixture.getResponseModel().getId())));

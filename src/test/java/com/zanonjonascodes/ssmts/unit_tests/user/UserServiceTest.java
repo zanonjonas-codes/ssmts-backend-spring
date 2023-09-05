@@ -28,7 +28,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zanonjonascodes.ssmts.core.config.parser.JacksonConfig;
 import com.zanonjonascodes.ssmts.core.config.security.PasswordEncoderConfig;
-import com.zanonjonascodes.ssmts.core.config.security.SecurityConfig;
 import com.zanonjonascodes.ssmts.fixture.UserFixture;
 import com.zanonjonascodes.ssmts.user.UserEntity;
 import com.zanonjonascodes.ssmts.user.UserMapper;

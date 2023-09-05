@@ -26,11 +26,11 @@ public class TenantController
     return tenantService;
   }
 
-  @GetMapping
-  @Override
-  @Secured({ "ADMIN" })
-  public ResponseEntity<PagedModel<TenantResponseModel>> findAll(Pageable pageable) {
-    return super.findAll(pageable);
-  }
+  // @GetMapping
+  // @Override
+  // @Secured({ "ADMIN" })
+  // public ResponseEntity<PagedModel<TenantResponseModel>> findAll(Pageable pageable) {
+  //   return super.findAll(pageable);
+  // }
 
 }
