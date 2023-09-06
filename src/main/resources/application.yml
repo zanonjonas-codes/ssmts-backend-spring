@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    username: root
+    url: jdbc:postgresql://localhost:5432/ssmts
+    password: paxazx01
+  sql:
+    init:
+      mode: always
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+server:
+  servlet:
+    context-path: /ssmts/api/v1
+logging:
+  level:
+    web: DEBUG
